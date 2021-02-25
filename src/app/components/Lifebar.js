@@ -28,8 +28,8 @@ const LastRollOutcome = styled.span`
   transition: opacity 0.2s ease-out;
   opacity: 0
     ${(props) =>
-      props.show &&
-      css`
+    props.show &&
+    css`
         opacity: 1;
       `};
 `;
@@ -37,11 +37,12 @@ const LastRollOutcome = styled.span`
 function Lifebar() {
   const player = usePlayer();
   const [showOutcome, setShowOutcome] = useState(false);
-  const lastOutcome = useSelector(lastHitSelector)?.[player];
+  const lastHit = useSelector(lastHitSelector);
   const life = useSelector(currentLifeSelector)(player);
 
   useEffect(() => {
     let timer;
+    const lastOutcome = lastHit?.[player]
     if (lastOutcome) {
       setShowOutcome(true);
       timer = setTimeout(() => setShowOutcome(false), 1000);
@@ -50,13 +51,13 @@ function Lifebar() {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [lastOutcome]);
+  }, [lastHit, player]);
 
   return (
     <Container>
       <h1 style={{ color: "white" }}>{player}</h1>{" "}
       <progress value={life} max="100" />
-      <LastRollOutcome show={showOutcome}>- {lastOutcome}</LastRollOutcome>
+      <LastRollOutcome show={showOutcome}>- {lastHit?.[player]}</LastRollOutcome>
     </Container>
   );
 }
