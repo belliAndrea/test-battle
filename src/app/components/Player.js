@@ -18,9 +18,13 @@ const Container = styled.div`
 
 const Sprite = styled.div`
   flex: 5;
-  width: 200px;
-  height: 500px;
   display: flex;
+  justify-content: center;
+  margin-bottom: 80px;
+`;
+
+const SpriteImg = styled.img`
+  height: 400px;
 `;
 
 const PlayerLayout = ({ children }) => {
@@ -50,21 +54,25 @@ function Player() {
       timer = setTimeout(() => setHitAnimation(false), 1700);
     }
     return () => {
+      setHitAnimation(false);
       if (timer) clearTimeout(timer);
     };
   }, [hit, player]);
 
   return (
     <Container>
-      {isThePlayer && hit?.[player] !== null && (
-        <div> You has been hit {hit?.[player]} </div>
-      )}
       <PlayerLayout>
         <Sprite>
           {hitAnimation ? (
-            <img src={isThePlayer ? playerHit : monsterHit} alt={player} />
+            <SpriteImg
+              src={isThePlayer ? playerHit : monsterHit}
+              alt={player}
+            />
           ) : (
-            <img src={isThePlayer ? playerIdle : monsterIdle} alt={player} />
+            <SpriteImg
+              src={isThePlayer ? playerIdle : monsterIdle}
+              alt={player}
+            />
           )}
         </Sprite>
         <Dices />
