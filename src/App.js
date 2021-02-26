@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import gameSlice, { winnerSelector } from "./app/redux/gameSlice";
 import background from "./assets/background.jpg";
 import Footer from "./app/components/Footer";
+import { EndGame } from './app/components/EndGame';
 
 const TitleContainer = styled.div`
   flex: 1;
@@ -17,7 +18,7 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 5rem;
+  font-size: 3rem;
 `;
 
 const Board = styled.div`
@@ -74,7 +75,7 @@ function App() {
       <TitleContainer>
         <Title>Street Fighter</Title>
       </TitleContainer>
-      {winner && <h1> THE WINNER IS {winner} </h1>}
+      {winner && <EndGame winner={winner} />}
       {!winner && (
         <Board>
           {gamers.map((item) => (
