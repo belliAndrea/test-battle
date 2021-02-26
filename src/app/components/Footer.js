@@ -8,7 +8,6 @@ const Button = styled.button`
   border-radius: 0.2em;
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-size: 32px;
   color: #ffffff;
@@ -18,6 +17,10 @@ const Button = styled.button`
     inset 0 0 0em 0.05em rgba(255, 255, 255, 0.12);
   text-align: center;
   position: relative;
+
+  &&:disabled {
+    opacity: .5
+  }
 `;
 
 const Container = styled.div`
