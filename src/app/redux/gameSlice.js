@@ -6,30 +6,7 @@ export const ROLL_STATES = {
   rolled: "rolled",
 };
 
-export const gameSlice = createSlice({
-  name: "game",
-  initialState: {
-    rolls: [],
-    rollState: ROLL_STATES.initial,
-  },
-  reducers: {
-    roll: (draft) => {
-      draft.rollState = ROLL_STATES.pending;
-    },
-    rolled: (draft, { payload }) => {
-      draft.rolls.unshift(payload);
-      draft.rollState = ROLL_STATES.rolled;
-    },
-    restart: (draft) => {
-      draft.rolls = [];
-      draft.rollState = ROLL_STATES.initial;
-    },
-  },
-});
-
-const rootSelector = (state) => state[gameSlice.name];
-
-const checkRollOutcome = (roll) => {
+const checkRollHits = (roll) => {
   const [[playerKey, playerRoll], [monsterKey, monsterRoll]] = Object.entries(
     roll
   );
@@ -53,11 +30,41 @@ const checkRollOutcome = (roll) => {
   };
 };
 
+export const gameSlice = createSlice({
+  name: "game",
+  initialState: {
+    rolls: [],
+    hits: [],
+    rollState: ROLL_STATES.initial,
+  },
+  reducers: {
+    roll: (draft) => {
+      draft.rollState = ROLL_STATES.pending;
+    },
+    rolled: (draft, { payload: roll }) => {
+      const hits = checkRollHits(roll)
+      draft.rolls.unshift(roll);
+      draft.hits.unshift(hits);
+      draft.rollState = ROLL_STATES.rolled;
+    },
+    restart: (draft) => {
+      draft.rolls = [];
+      draft.hits = [];
+      draft.rollState = ROLL_STATES.initial;
+    },
+  },
+});
+
+const rootSelector = (state) => state[gameSlice.name];
+
+
+
 const rollStateSelector = createSelector(
   rootSelector,
   (state) => state.rollState
 );
 const rollsSelector = createSelector(rootSelector, (state) => state.rolls);
+const hitsSelector = createSelector(rootSelector, (state) => state.hits);
 
 export const isRollingSelector = createSelector(
   rollStateSelector,
@@ -73,20 +80,19 @@ export const lastRollSelector = createSelector(
   }
 );
 
-export const lastHitSelector = createSelector(rollsSelector, (rolls) => {
-  const [lastRoll] = rolls;
-  if (!lastRoll) return null;
-  return checkRollOutcome(lastRoll);
+export const lastHitSelector = createSelector(hitsSelector, (hits) => {
+  const [lastHit] = hits;
+  if (!lastHit) return null;
+  return lastHit;
 });
 
 export const currentLifeSelector = createSelector(
-  rollsSelector,
-  (rolls) => (player) => {
-    if (!rolls.length) return 100;
-    return rolls.reduce((acc, roll) => {
-      const outcome = checkRollOutcome(roll);
-      const playerOutcome = outcome[player];
-      return playerOutcome ? acc - playerOutcome : acc;
+  hitsSelector,
+  (hits) => (player) => {
+    if (!hits.length) return 100;
+    return hits.reduce((acc, hit) => {
+      const playerHit = hit[player];
+      return playerHit ? acc - playerHit : acc;
     }, 100);
   }
 );

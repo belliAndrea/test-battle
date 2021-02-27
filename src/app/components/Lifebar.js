@@ -34,6 +34,11 @@ const LastRollOutcome = styled.span`
       `};
 `;
 
+
+const Hit = styled.span`
+      color: red
+`
+
 function Lifebar() {
   const player = usePlayer();
   const [showOutcome, setShowOutcome] = useState(false);
@@ -43,7 +48,7 @@ function Lifebar() {
   useEffect(() => {
     let timer;
     const lastOutcome = lastHit?.[player]
-    if (lastOutcome) {
+    if (lastOutcome !== null) {
       setShowOutcome(true);
       timer = setTimeout(() => setShowOutcome(false), 1000);
     }
@@ -53,11 +58,15 @@ function Lifebar() {
     };
   }, [lastHit, player]);
 
+  const hit = lastHit?.[player]
+
+  const isEven = hit !== null && hit === 0
+
   return (
     <Container>
       <h1 style={{ color: "white" }}>{player}</h1>{" "}
       <progress value={life} max="100" />
-      <LastRollOutcome show={showOutcome}>- {lastHit?.[player]}</LastRollOutcome>
+      <LastRollOutcome show={showOutcome}>{isEven ? 'Even!' : <Hit color="red">- {hit}</Hit>}</LastRollOutcome>
     </Container>
   );
 }
