@@ -7,6 +7,7 @@ import playerHit from "../../assets/player_hit.gif";
 import monsterIdle from "../../assets/blanka_idle.gif";
 import monsterHit from "../../assets/blanka_hit.gif";
 import { useSelector } from "react-redux";
+import { SwitchLayout } from './SwitchLayout'
 import { lastHitSelector } from "../redux/gameSlice";
 
 const Container = styled.div`
@@ -26,17 +27,6 @@ const Sprite = styled.div`
 const SpriteImg = styled.img`
   height: 400px;
 `;
-
-const PlayerLayout = ({ children }) => {
-  const player = usePlayer();
-
-  return (
-    <>
-      {children[player === "The Monster" ? 1 : 0]}
-      {children[player === "The Monster" ? 0 : 1]}
-    </>
-  );
-};
 
 function Player() {
   const player = usePlayer();
@@ -61,7 +51,7 @@ function Player() {
 
   return (
     <Container>
-      <PlayerLayout>
+      <SwitchLayout>
         <Sprite>
           {hitAnimation ? (
             <SpriteImg
@@ -69,14 +59,14 @@ function Player() {
               alt={player}
             />
           ) : (
-            <SpriteImg
-              src={isThePlayer ? playerIdle : monsterIdle}
-              alt={player}
-            />
-          )}
+              <SpriteImg
+                src={isThePlayer ? playerIdle : monsterIdle}
+                alt={player}
+              />
+            )}
         </Sprite>
         <Dices />
-      </PlayerLayout>
+      </SwitchLayout>
     </Container>
   );
 }

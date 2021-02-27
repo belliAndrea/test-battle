@@ -3,6 +3,12 @@ import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import { currentLifeSelector, lastHitSelector } from "../redux/gameSlice";
 import { usePlayer } from "../playerContex";
+import { SwitchLayout } from './SwitchLayout'
+
+const PlayerName = styled.div`
+  color: white;
+  font-size: 4rem;
+`
 
 const Container = styled.div`
   flex: 1;
@@ -23,7 +29,7 @@ const Container = styled.div`
 const LastRollOutcome = styled.span`
   position: absolute;
   font-size: 12rem;
-  right: 0;
+  ${({ position }) => `${position}: 0`}
   color: white;
   transition: opacity 0.2s ease-out;
   opacity: 0
@@ -48,7 +54,7 @@ function Lifebar() {
   useEffect(() => {
     let timer;
     const lastOutcome = lastHit?.[player]
-    if (lastOutcome !== null) {
+    if (![undefined, null].includes(lastOutcome)) {
       setShowOutcome(true);
       timer = setTimeout(() => setShowOutcome(false), 1000);
     }
@@ -59,14 +65,20 @@ function Lifebar() {
   }, [lastHit, player]);
 
   const hit = lastHit?.[player]
-
-  const isEven = hit !== null && hit === 0
+  const isEven = hit === 0
 
   return (
     <Container>
-      <h1 style={{ color: "white" }}>{player}</h1>{" "}
-      <progress value={life} max="100" />
-      <LastRollOutcome show={showOutcome}>{isEven ? 'Even!' : <Hit color="red">- {hit}</Hit>}</LastRollOutcome>
+      <SwitchLayout>
+        <PlayerName>{player}</PlayerName>
+        <>
+          <progress value={life} max="100" />
+          <LastRollOutcome
+            position={player === 'The Player' ? 'right' : 'left'}
+            show={showOutcome}
+          >{isEven ? 'Even!' : <Hit color="red">- {hit}</Hit>}</LastRollOutcome>
+        </>
+      </SwitchLayout>
     </Container>
   );
 }
