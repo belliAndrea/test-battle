@@ -1,4 +1,3 @@
-import React from "react";
 import IsRolling from "./IsRolling";
 import styled from "styled-components";
 
