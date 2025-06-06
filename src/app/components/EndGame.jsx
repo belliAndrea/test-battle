@@ -5,7 +5,7 @@ const Outcome = styled.span`
   color: ${props => props.win ? 'green' : 'red'}
 `
 
-function EndGame(winner) {
+function EndGame({ winner }) {
   if (winner === 'The Player') {
     return <Outcome win>YOU WIN</Outcome>
   }
