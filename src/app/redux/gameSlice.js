@@ -1,4 +1,5 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
+import checkRollHits from "./checkRollHits.js";
 
 export const ROLL_STATES = {
   initial: "initial",
@@ -6,29 +7,6 @@ export const ROLL_STATES = {
   rolled: "rolled",
 };
 
-const checkRollHits = (roll) => {
-  const [[playerKey, playerRoll], [monsterKey, monsterRoll]] = Object.entries(
-    roll
-  );
-
-  const playerSum = playerRoll.reduce((a, b) => a + b, 0);
-  const monsterSum = monsterRoll.reduce((a, b) => a + b, 0);
-
-  const even = monsterSum === playerSum;
-  const monsterWin = monsterSum > playerSum;
-
-  if (even) {
-    return {
-      [playerKey]: 0,
-      [monsterKey]: 0,
-    };
-  }
-
-  return {
-    [playerKey]: monsterWin ? monsterSum - playerSum : null,
-    [monsterKey]: monsterWin ? null : playerSum - monsterSum,
-  };
-};
 
 export const gameSlice = createSlice({
   name: "game",
